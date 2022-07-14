@@ -321,6 +321,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MF4ZKXP3MU;
 				ENABLE_HARDENED_RUNTIME = YES;
+				OTHER_CFLAGS = (
+					"-Xclang",
+					"-fopenmp",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -332,6 +336,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MF4ZKXP3MU;
 				ENABLE_HARDENED_RUNTIME = YES;
+				OTHER_CFLAGS = (
+					"-Xclang",
+					"-fopenmp",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

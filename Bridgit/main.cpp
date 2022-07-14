@@ -253,9 +253,9 @@ int main(int argc, const char * argv[]) {
     dlPBN.currentTrickSuit[1] = DDSStrain::Spades;
     dlPBN.currentTrickSuit[2] = DDSStrain::Spades;
     
-    dlPBN.currentTrickRank[0] = 0;
-    dlPBN.currentTrickRank[1] = 0;
-    dlPBN.currentTrickRank[2] = 0;
+    dlPBN.currentTrickRank[0] = 5;
+    dlPBN.currentTrickRank[1] = 2;
+    dlPBN.currentTrickRank[2] = 10;
     
     strncpy(dlPBN.remainCards, PBNExample2.c_str(), sizeof(dlPBN.remainCards));
     
@@ -267,7 +267,8 @@ int main(int argc, const char * argv[]) {
     SolveBoardPBN(dlPBN, target, solutions, mode, &fut, threadIndex);
   
     playTracePBN DDplayPBN;
-    solvedPlay solved;
+    solvedPlay solved; // int number: trick number
+                       // int tricks[53]: Even entries are binary-encoded holdings; odd entries are tricks. Starting position and up to 52 cards
     
     DDplayPBN.number = 1;               // 1 card played (CK) so far in this deal
     strcpy(DDplayPBN.cards, "CK");      // Any cards already played would go here like this: "HAHKHQH7D7D8DAD9C5CAC6C3"
@@ -285,6 +286,34 @@ int main(int argc, const char * argv[]) {
     
     PrintPBNPlay(&DDplayPBN, &solved);
     
+    struct ddTableResults tableResults;
+    struct ddTableDealPBN tableDealPBN;
+    strncpy(tableDealPBN.cards, PBNExample2.c_str(), sizeof(tableDealPBN.cards));
+    struct parResults presp;
+    int vulnerable = 0; //   /* vulnerable 0: None 1: Both 2: NS 3: EW */
+    
+    res = CalcDDtablePBN(tableDealPBN, &tableResults);
+    if (res != RETURN_NO_FAULT)    {
+        char line[80];
+        
+        ErrorMessage(res, line);
+        std::cout << "DDS error: " << line << endl;
+    }
+    
+    res = Par(&tableResults, &presp, vulnerable);
+    if (res != RETURN_NO_FAULT)    {
+        char line[80];
+        
+        ErrorMessage(res, line);
+        std::cout << "DDS error: " << line << endl;
+    }
+
+    std::cout << "Par score    " << presp.parScore[0] << endl;
+    std::cout << "Par score    " << presp.parScore[1] << endl;
+    std::cout << "Par contract " << presp.parContractsString[0] << endl;
+    std::cout << "Par contract " << presp.parContractsString[1] << endl;
+    std::cout << endl << endl << "-----------------------------------------------------" << endl << endl;
+
     // TestAnalysePlayPBN();
     
     // Get some information about the Double Dummy Solver
